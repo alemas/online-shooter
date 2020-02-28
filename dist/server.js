@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/server.ts");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/server/server.ts");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -2116,15 +2116,15 @@ eval("\n\nconst EventEmitter = __webpack_require__(/*! events */ \"events\");\nc
 
 /***/ }),
 
-/***/ "./src/server.ts":
-/*!***********************!*\
-  !*** ./src/server.ts ***!
-  \***********************/
+/***/ "./src/server/server.ts":
+/*!******************************!*\
+  !*** ./src/server/server.ts ***!
+  \******************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\r\nvar __importDefault = (this && this.__importDefault) || function (mod) {\r\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\r\n};\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nvar express_1 = __importDefault(__webpack_require__(/*! express */ \"./node_modules/express/index.js\"));\r\nvar socket_io_1 = __importDefault(__webpack_require__(/*! socket.io */ \"./node_modules/socket.io/lib/index.js\"));\r\nvar app = express_1.default();\r\nvar port = 3000;\r\nvar server = __webpack_require__(/*! http */ \"http\").Server(app);\r\nvar io = socket_io_1.default.listen(server, { serveClient: false });\r\napp.use(express_1.default.static(__dirname + \"/public\"));\r\napp.get('/', function (req, res) {\r\n    res.sendFile(__dirname + '/index.html');\r\n});\r\nserver.listen(port, function () {\r\n    console.log(\"Listening on port \" + port);\r\n});\r\nio.on(\"connection\", function (socket) {\r\n    console.log(\"new user connected\");\r\n    socket.on(\"disconnect\", function () {\r\n        console.log(\"some user disconnected\");\r\n    });\r\n});\r\n\n\n//# sourceURL=webpack:///./src/server.ts?");
+eval("\r\nvar __importDefault = (this && this.__importDefault) || function (mod) {\r\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\r\n};\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nvar express_1 = __importDefault(__webpack_require__(/*! express */ \"./node_modules/express/index.js\"));\r\nvar socket_io_1 = __importDefault(__webpack_require__(/*! socket.io */ \"./node_modules/socket.io/lib/index.js\"));\r\nvar app = express_1.default();\r\nvar port = 3000;\r\nvar server = __webpack_require__(/*! http */ \"http\").Server(app);\r\nvar io = socket_io_1.default.listen(server, { serveClient: false });\r\napp.use(express_1.default.static(__dirname + \"/public\"));\r\napp.get('/', function (req, res) {\r\n    res.sendFile(__dirname + '/index.html');\r\n});\r\nserver.listen(port, function () {\r\n    console.log(\"Listening on port \" + port);\r\n});\r\nio.on(\"connection\", function (socket) {\r\n    console.log(\"someone connected\");\r\n    socket.on(\"newUser\", function (data) {\r\n        console.log(\"User \" + data.username + \" connected\\nUser id = \" + data.id);\r\n    });\r\n    socket.on(\"message\", function (data) {\r\n        console.log(data.sender.username + \": \" + data.message);\r\n    });\r\n    socket.on(\"disconnect\", function () {\r\n        console.log(\"some user disconnected\");\r\n    });\r\n});\r\n\n\n//# sourceURL=webpack:///./src/server/server.ts?");
 
 /***/ }),
 

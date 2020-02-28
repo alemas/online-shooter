@@ -1,7 +1,7 @@
 const path = require('path');
 
 const clientConfig = {
-  entry: "./src/public/app.ts",
+  entry: "./src/client/app.ts",
   module: {
     rules: [
       {
@@ -23,7 +23,7 @@ const clientConfig = {
 };
 
 const serverConfig = {
-  entry: "./src/server.ts",
+  entry: "./src/server/server.ts",
   module: {
     rules: [
       {
