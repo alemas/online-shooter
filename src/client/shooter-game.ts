@@ -1,14 +1,21 @@
-import Phaser from "phaser";
+import Phaser, { Game } from "phaser";
+import { GameScene } from "./scenes/game-scene";
+import { Size } from "../data-structures/size";
 
 export class ShooterGame extends Phaser.Game {
 
+    public readonly canvasSize: Size;
+
     constructor() {
+
+        let gameScene = new GameScene();
+        let csize: Size = {width: 1280, height: 720}
 
         let config = {
             type: Phaser.AUTO,
             parent: 'game',
-            width: 1280,
-            height: 720,
+            width: csize.width,
+            height: csize.height,
             backgroundColor: 0xf0f0f0,
             physics: {
                 default: 'arcade',
@@ -17,20 +24,11 @@ export class ShooterGame extends Phaser.Game {
                     gravity: { y: 0 }
                 }
             },
+            scene: [gameScene]
         };
 
         super(config);
+        this.canvasSize = csize;
     }
-
-    private preload() {
     
-    }
-      
-    private create() {
-      
-    }
-      
-    private update() {
-
-    }
 } 

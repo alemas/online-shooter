@@ -1,13 +1,18 @@
-import io from "socket.io-client";
-import Phaser from "phaser";
-
 import { User } from "./user";
 import { ShooterGame } from "./shooter-game";
-import { SocketManager } from "./socket/socket-manager";
+import { ClientSocketManager } from "./socket/client-socket-manager";
 
+let game: ShooterGame;
+let user: User;
 
-let game = new ShooterGame();
-User.username = "Alemas";
-SocketManager.init();
-SocketManager.sendNewUser();
-SocketManager.sendMessage("Alou meus irmaozinhos");
+init();
+
+async function init() {
+    game = new ShooterGame();
+    user = new User();
+
+    user.id = await ClientSocketManager.init();
+    user.username = "Alemas";
+    ClientSocketManager.setUser(user);
+    ClientSocketManager.sendNewUser();
+}
