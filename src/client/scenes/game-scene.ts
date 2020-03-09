@@ -1,42 +1,49 @@
+import MatterJS from "matter-js";
 import Phaser from "phaser";
 import { ShooterGame } from "../shooter-game";
+import { GamePhysics } from "../../game/game-physics";
+import { Entity } from "../../game/entities/entity";
+import { BodyFactory } from "../../game/body-factory";
+import { PlayerEntity } from "../../game/entities/player-entity";
+import { BarrierEntity } from "../../game/entities/barrier-entity";
 
 export class GameScene extends Phaser.Scene {
 
-    private player: Phaser.Physics.Arcade.Sprite | undefined;
+    private player: PlayerEntity | undefined;
     private keys: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
     private mousePos: Phaser.Geom.Point | undefined;
+    private gamePhysics: GamePhysics | undefined;
 
     constructor() {
         let config = {
-            key: "GameScene",
-            active: true
+            key: "GameScene"
         };
         super(config);
-    }
-
-    public init(params: [any]) {
 
     }
 
     public preload() {
-        this.load.image('player', './assets/images/player_red.png');
+        this.load.image('player', './assets/images/player_red_64.png');
     }
 
     public create() {
         const maxWidth = (this.game as ShooterGame).canvasSize.width;
         const maxHeight = (this.game as ShooterGame).canvasSize.height;
+        const centerX = maxWidth / 2;
+        const centerY = maxHeight / 2;
 
-        this.player = this.physics.add.sprite(maxWidth / 2, maxHeight / 2, 'player');
-        this.player.setOrigin(0.5, 0.5);
-        this.player.scale = 0.5;
-        // this.input.keyboard.addKeys({
-        //     'up': Phaser.Input.Keyboard.KeyCodes.W,
-        //     'down': Phaser.Input.Keyboard.KeyCodes.S,
-        //     'left': Phaser.Input.Keyboard.KeyCodes.A,
-        //     'right': Phaser.Input.Keyboard.KeyCodes.D
-        // });
-        this.keys = this.input.keyboard.createCursorKeys();
+        this.player = new PlayerEntity(centerX, centerY, this);
+
+        this.gamePhysics = new GamePhysics(this);
+        this.gamePhysics.addEntity("player", this.player);
+
+        this.keys = this.input.keyboard.addKeys({
+            up: Phaser.Input.Keyboard.KeyCodes.W,
+            down: Phaser.Input.Keyboard.KeyCodes.S,
+            left: Phaser.Input.Keyboard.KeyCodes.A,
+            right: Phaser.Input.Keyboard.KeyCodes.D
+        });
+
         this.mousePos = new Phaser.Geom.Point(0, 0);
 
         this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
@@ -47,27 +54,27 @@ export class GameScene extends Phaser.Scene {
     public update() {
 
         if (this.keys && this.player) {
-            
-            let speed = 200;
-            this.player!.setDrag(1000);
+
+            let speed = 0.01;
+            let force = { x: 0, y: 0 };
 
             if (this.keys!.up!.isDown) {
-                this.player!.setVelocityY(-speed);
+                force.y = -speed;
             } else if (this.keys!.down!.isDown) {
-                this.player!.setVelocityY(speed);
+                force.y = speed;
             } else {
-                // this.player!.setVelocityY(0);
             }
 
             if (this.keys!.left!.isDown) {
-                this.player!.setVelocityX(-speed);
+                force.x = -speed;
             } else if (this.keys!.right!.isDown) {
-                this.player!.setVelocityX(speed);
+                force.x = speed;
             } else {
-                // this.player!.setVelocityX(0);
             }
 
-            this.player!.rotation = Phaser.Math.Angle.Between(this.player!.x, this.player!.y, this.mousePos!.x, this.mousePos!.y);
+            let angleToMouse = Phaser.Math.Angle.Between(this.player!.position.x, this.player!.position.y, this.mousePos!.x, this.mousePos!.y);
+            this.player.setAngle(angleToMouse);
+            this.player.applyForce(force);
         }
     }
 }

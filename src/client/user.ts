@@ -1,8 +1,8 @@
-import { ClientSocketManager } from "./socket/client-socket-manager";
+import { ClientSocketManager } from "../socket/client-socket-manager";
 
 export class User {
 
-    public username: string = "";
-    public id: string = "";
+    public static username: string = "";
+    public static id: string = "";
 
 }

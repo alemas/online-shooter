@@ -1,6 +1,7 @@
 import Phaser, { Game } from "phaser";
+import { Size } from "../socket/data-structures/size";
 import { GameScene } from "./scenes/game-scene";
-import { Size } from "../data-structures/size";
+import { LoginScene } from "./scenes/login-scene";
 
 export class ShooterGame extends Phaser.Game {
 
@@ -8,23 +9,29 @@ export class ShooterGame extends Phaser.Game {
 
     constructor() {
 
+        let loginScene = new LoginScene();
         let gameScene = new GameScene();
-        let csize: Size = {width: 1280, height: 720}
+        let csize: Size = {width: 1600, height: 900}
 
         let config = {
             type: Phaser.AUTO,
             parent: 'game',
             width: csize.width,
             height: csize.height,
-            backgroundColor: 0xf0f0f0,
-            physics: {
-                default: 'arcade',
-                arcade: {
-                    debug: true,
-                    gravity: { y: 0 }
-                }
+            backgroundColor: 0xa9ceeb,
+            title: "Best game",
+            dom: {
+                createContainer: true
             },
-            scene: [gameScene]
+            // physics: {
+            //     default: 'matter',
+            //     matter: {
+            //         enabled: false,
+            //         debug: true,
+            //         gravity: false
+            //     }
+            // },
+            scene: [loginScene, gameScene]
         };
 
         super(config);
