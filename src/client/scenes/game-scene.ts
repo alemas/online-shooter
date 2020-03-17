@@ -44,11 +44,15 @@ export class GameScene extends Phaser.Scene {
             right: Phaser.Input.Keyboard.KeyCodes.D
         });
 
+        this.cameras.main.setBounds(0, 0, this.gamePhysics.mapDimensions.w, this.gamePhysics.mapDimensions.h);
+
         this.mousePos = new Phaser.Geom.Point(0, 0);
 
-        this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
-            this.mousePos!.setTo(pointer.x + this.cameras.main.scrollX, pointer.y + this.cameras.main.scrollY);
-        });
+        // this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
+        //     this.mousePos!.setTo(pointer.x + this.cameras.main.scrollX, pointer.y + this.cameras.main.scrollY);
+        // });
+
+
     }
 
     public update() {
@@ -72,9 +76,34 @@ export class GameScene extends Phaser.Scene {
             } else {
             }
 
+            this.mousePos!.setTo(this.input.mousePointer.x + this.cameras.main.scrollX, this.input.mousePointer.y + this.cameras.main.scrollY);
             let angleToMouse = Phaser.Math.Angle.Between(this.player!.position.x, this.player!.position.y, this.mousePos!.x, this.mousePos!.y);
             this.player.setAngle(angleToMouse);
             this.player.applyForce(force);
+
+            this.updateCamera();
+        }
+    }
+
+    private updateCamera() {
+        if (this.player) {
+
+            const px = this.player.position.x;
+            const py = this.player.position.y;
+            const mx = px * 0.7 + this.mousePos!.x * 0.3;
+            const my = py * 0.7 + this.mousePos!.y * 0.3;
+
+            const distanceToPlayer = Math.sqrt(Math.pow(mx - px, 2) + Math.pow(my - py, 2));
+            const angleToPlayer = Phaser.Math.Angle.Between(px, py, mx, my);
+            const unitVector = {x: Math.cos(angleToPlayer), y: Math.sin(angleToPlayer)};
+
+            const limit = 200;
+
+            if (distanceToPlayer < limit) {
+                this.cameras.main.centerOn(mx, my);
+            } else {
+                this.cameras.main.centerOn(px + unitVector.x * limit, py + unitVector.y * limit)
+            }
         }
     }
 }

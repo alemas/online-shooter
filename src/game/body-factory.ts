@@ -1,7 +1,7 @@
 import { Body, Bodies, IBodyDefinition } from "matter-js";
 
 export enum BodyShape {
-    Circle = "Circle", Rectangle = "Rectangle"
+    Circle = "Circle", Rectangle = "Rectangle", Polygon = "Polygon"
 }
 
 export class BodyFactory {
@@ -20,6 +20,21 @@ export class BodyFactory {
         else
             options.type = BodyShape.Rectangle
         return Bodies.rectangle(x, y, width, height, options);
+    }
+
+    /**
+     * @description *IMPORTANT* Only supports CONVEXES polygons. Concave shapes will crash
+     * @param x 
+     * @param y 
+     * @param points 
+     * @param options 
+     */
+    public static createPolygon(x: number, y: number, points: Matter.Vector[][], options?: IBodyDefinition): Body {
+        if (options == undefined)
+            return Bodies.fromVertices(x, y, points, {type: BodyShape.Polygon});
+        else 
+            options.type = BodyShape.Polygon;
+        return Bodies.fromVertices(x, y, points, options);
     }
 
 }
