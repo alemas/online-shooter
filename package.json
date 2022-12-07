@@ -29,7 +29,7 @@
     "webpack-cli": "^3.3.11"
   },
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "matter-js": "^0.14.2",
     "phaser": "^3.22.0",
     "rxjs": "^6.5.4",
